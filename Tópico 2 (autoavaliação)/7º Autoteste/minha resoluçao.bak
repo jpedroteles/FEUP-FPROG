@@ -1,0 +1,80 @@
+; Problema 1
+
+;alinea 1.1
+
+(define ordenada
+  (lambda (ponto)
+    (cdr ponto)))
+
+(define abcissa
+  (lambda (ponto)
+    (car ponto)))
+
+(define funcao-reta
+  (lambda (p1 p2)
+    (if (= (abcissa p1) (abcissa p2))
+        (display "reta vertical")
+        (let* ((m (/ (- (ordenada p2) (ordenada p1))
+                     (- (abcissa p2)(abcissa p1))))
+               (b (- (ordenada p1) (* m (abcissa p1)))))
+          (lambda (x)
+            (+ (* m x) b))))))
+
+;aline 1.2
+
+(define cima?
+  (lambda (r1 r2 x)
+;    (let ((y1 (funcao-reta r1 x))
+;          (y2 (funcao-reta r2 x)))
+;      (if ((positive? (- y1 y2))
+;          #t)
+;          (if negative? (- y1 y2))
+;          #f))))
+    (> (r1 x)
+       (r2 x))))
+                  
+; Problema 2
+
+;alinea 2.1
+
+(define cria-jogo
+  (lambda (clube1 golos1 clube2 golos2)
+    (cons (cons clube1 clube2) (cons golos1 golos2))))
+
+
+;alinea 2.2
+
+(define vencedor-jogo
+  (lambda (jogo)
+    (cond ((> (cadr jogo) (cddr jogo))
+           (car (car jogo)))
+          ((< (cadr jogo) (cddr jogo))
+           (cdr (car jogo)))
+          (else
+           'empate))))
+;alinea 2.3
+
+(define cria-pontuacao
+  (lambda (clubes)
+    (if (null? clubes)
+        ()
+        (cons (cons (car clubes) 0) (cria-pontuacao (cdr clubes))))))
+
+;alinea 2.4
+
+(define atualiza-pontuacao
+  (lambda (pontuacao clube ponto)
+    (if (null? pontuacao)
+        ()
+        (if (equal? (caar pontuacao) clube)
+            (cons (cons (caar pontuacao) (+ (cdar pontuacao) pontos)) (cdr pontuacao))
+            (cons (car pontuacao) (atualiza-pontuacao (cdr pontuacao) clube pontos))))))
+
+
+; Testes
+
+(define r1 (funcao-reta (cons 1 2) (cons 5 4)))
+;(define r2 (funcao-reta (cons 5 2) (cons 5 4)))
+(define r2 (funcao-reta (cons 1 1) (cons 4 4)))
+(define j1 (cria-jogo 'a 3 'b 2))
+(define j2 (cria-jogo 'c 1 'd 1))
